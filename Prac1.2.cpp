@@ -1,137 +1,91 @@
-/*Write a program for an inventory management system using both procedural and
-object-oriented approaches. The system should handle products with attributes:
-ID, name, quantity, and price.
-Implement these functionalities:
-o Add a new product.
-o Update the quantity of an existing product.
-o Calculate the total value of all products.
-Objective: Compare the procedural and object-oriented implementations by
-evaluating code reusability and complexity.*/
 
-#include<iostream>
+#include <iostream>
+#include <string.h>
+
 using namespace std;
 
-struct ProductDetails
-{
-    int id;
-    char name[50];
-    int quantity;
-    float price;
-} Products[100];
+class product{
+private:
+    int pid,pquan,prate,ptotal;
+    char pname[20];
 
-int AddProduct();
-int UpdateQuantity();
-void CalculateTotalValue(int a);
+public:
+    void addProduct(char x[20],int y,int z)
+    {
+        strcpy(pname,x);
+        pid=y;
+        prate=z;
+        pquan=1;
+    }
+    int searchProd(int searchID)
+    {
+        if(pid==searchID)
+            return 1;
+        else
+            return 0;
+    }
+    void updateQuantity(int p)
+    {
+        pquan++;
+    }
+    int returnTotal()
+    {
+        return prate*pquan;
+    }
+};
 
 int main()
 {
-    int NumProducts;
-    cout << "Enter number of Products: ";
-    cin >> NumProducts;
+    product p[30];
+    int id,rate,prodCount=0;
+    char name[20];
+    int i,choice,totalAmount=0;
 
-    for(int i = 0; i < NumProducts; i++)
+    bill:
+    cout<<"Enter the name of the product: ";
+    cin>>name;
+    cout<<"Enter the ID of the product: ";
+    cin>>id;
+    cout<<"Enter the price of the product: ";
+    cin>>rate;
+    if(prodCount==0)
     {
-        cout << "Product ID: ";
-        cin >> Products[i].id;
-        cout << "Product Name: ";
-        cin >> Products[i].name;
-        cout << "Product Quantity: ";
-        cin >> Products[i].quantity;
-        cout << "Product Price: ";
-        cin >> Products[i].price;
+        p[0].addProduct(name,id,rate);
+        prodCount++;
     }
-
-    int choice, num, flag = 0;
-
-    cout << "Your choice: ";
-    cin >> choice;
-
-    switch(choice)
+    else
     {
-    case 1:
-        num = AddProduct();
-
-        int NewNumProducts = NumProducts + num;
-
-
-        for(int i = NumProducts; i < NewNumProducts; i++)
+        for(i=0;i<prodCount;i++)
         {
-            cout << "Product ID: ";
-            cin >> Products[i].id;
-            cout << "Product Name: ";
-            cin >> Products[i].name;
-            cout << "Product Quantity: ";
-            cin >> Products[i].quantity;
-            cout << "Product Price: ";
-            cin >> Products[i].price;
-        }
-
-        NumProducts = NewNumProducts;
-        break;
-
-    case 2:
-        int id_update, update_quantity;
-        cout << "Enter Product ID of which you want to update quantity: ";
-        cin >> id_update;
-
-
-        for(int i = 0; i < NumProducts; i++)
-        {
-            if(id_update == Products[i].id)
+            if(p[i].searchProd(id)==1)
             {
-                update_quantity = UpdateQuantity();
-                Products[i].quantity = update_quantity;
-                flag = 0;
                 break;
             }
-            else {
-                flag = 1;
-            }
         }
-
-        if(flag == 1)
+        if(i==prodCount)
         {
-            cout << "No such ID found\n";
+            p[i].addProduct(name,id,rate);
+            prodCount++;
         }
-        break;
-
-
-    case 3:
-        CalculateTotalValue(NumProducts);
-        break;
-
-    default:
-        cout << "Enter a valid number between 1 to 3\n";
+        else{
+            p[i].updateQuantity(rate);
+        }
     }
-
-    return 0;
-}
-
-int AddProduct()
-{
-    int n;
-    cout << "Enter how many new products to be added: ";
-    cin >> n;
-
-    return n;
-}
-
-int UpdateQuantity()
-{
-    int quan;
-    cout << "Enter updated amount of quantity: ";
-    cin >> quan;
-    return quan;
-}
-
-void CalculateTotalValue(int a)
-{
-    float total = 0;
-    for(int i = 0; i < a; i++)
+    cout<<"Enter 1 to continue and 0 to exit the system!\n";
+    cin>>choice;
+    if(choice==1)
     {
-        total = total + (Products[i].quantity * Products[i].price);
+        goto bill;
     }
+    else
+    {
+        for(i=0;i<prodCount;i++)
+        {
+            totalAmount += p[i].returnTotal();
+        }
 
-    cout << "Total value of all products = $" << total << endl;
+        cout<<endl << "Total bill is: "<<totalAmount<<endl;
+        cout<<"Thank You!\n";
+    }
+    cout<<"YUG SHAH 24CE114"<<endl;
 }
-
